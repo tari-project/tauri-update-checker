@@ -26,11 +26,12 @@ struct Platforms {
     #[serde(rename = "linux-x86_64")]
     linux_x86_64: Release,
     #[serde(rename = "darwin-aarch64")]
-    darwin_aarch64: Release,
+    darwin_aarch64: Option<Release>,
     #[serde(rename = "darwin-x86_64")]
-    darwin_x86_64: Release,
+    darwin_x86_64: Option<Release>,
+
     #[serde(rename = "windows-x86_64")]
-    windows_x86_64: Release,
+    windows_x86_64: Option<Release>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -55,12 +56,18 @@ async fn main() {
     // Parse the JSON data
     let manifest: Manifest = serde_json::from_str(json_data).expect("bad json");
 
-    let platforms = vec![
-        ("linux_x86_64", &manifest.platforms.linux_x86_64),
-        ("darwin_aarch64", &manifest.platforms.darwin_aarch64),
-        ("darwin_x86_64", &manifest.platforms.darwin_x86_64),
-        ("windows_x86_64", &manifest.platforms.windows_x86_64),
-    ];
+    let mut platforms = vec![];
+    platforms.push(("linux_x86_64", &manifest.platforms.linux_x86_64));
+    if let Some(x) = &manifest.platforms.darwin_aarch64 {
+        platforms.push(("darwin_aarch64", x));
+    }
+
+    if let Some(x) = &manifest.platforms.darwin_x86_64 {
+        platforms.push(("darwin_x86_64", x));
+    }
+    if let Some(x) = &manifest.platforms.windows_x86_64 {
+        platforms.push(("windows_x86_64", x));
+    }
     let mut num_tested = 0;
     let mut num_ok = 0;
     // Iterate over each platform
