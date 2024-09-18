@@ -1,0 +1,16 @@
+[package]
+name = "updater-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = { version = "0.11", features = ["blocking", "json", "stream"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+base64 = "0.22"
+ring = "0.16"
+anyhow = "*"
+futures-util = "0.3"
+minisign-verify = "0.2"
+# base64 = { version = "0.22" }
+tokio = { version = "1", features = ["full"] }
